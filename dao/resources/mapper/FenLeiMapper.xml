@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.shop.dao.FenLeiMapper">
+  <resultMap id="BaseResultMap" type="org.shop.pojo.FenLei">
+    <id column="sort_id" jdbcType="INTEGER" property="sortId" />
+    <result column="sort_name" jdbcType="VARCHAR" property="sortName" />
+    <result column="sort_describe" jdbcType="VARCHAR" property="sortDescribe" />
+    <result column="sort_remark" jdbcType="VARCHAR" property="sortRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    sort_id, sort_name, sort_describe, sort_remark
+  </sql>
+  <select id="selectByExample" parameterType="org.shop.pojo.FenLeiExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from fenlei
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectOne" parameterType="org.shop.pojo.FenLei" resultMap="BaseResultMap">
+         select * from fenlei 
+         <where>
+              <if test="sortId!=null and sortId!=''">and sort_id = #{sortId,jdbcType=INTEGER}</if>
+              <if test="sortName!=null and sortName!=''">and sort_name like "%"#{sortName}"%"</if>
+              <if test="sortDescribe!=null and sortDescribe!=''">and sort_describe like "%"#{sortDescribe}"%"</if>
+              <if test="sortRemark!=null and sortRemark!=''">and sort_remark like "%"#{sortRemark}"%"</if>
+         </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fenlei
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllNames" resultType="java.lang.String">
+       select sort_name from fenlei
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fenlei
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.shop.pojo.FenLeiExample">
+    delete from fenlei
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.shop.pojo.FenLei">
+    insert into fenlei (sort_id, sort_name, sort_describe, 
+      sort_remark)
+    values (#{sortId,jdbcType=INTEGER}, #{sortName,jdbcType=VARCHAR}, #{sortDescribe,jdbcType=VARCHAR}, 
+      #{sortRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.shop.pojo.FenLei">
+    insert into fenlei
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sortId != null">
+        sort_id,
+      </if>
+      <if test="sortName != null">
+        sort_name,
+      </if>
+      <if test="sortDescribe != null">
+        sort_describe,
+      </if>
+      <if test="sortRemark != null">
+        sort_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sortId != null">
+        #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="sortName != null">
+        #{sortName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortDescribe != null">
+        #{sortDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="sortRemark != null">
+        #{sortRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.shop.pojo.FenLeiExample" resultType="java.lang.Long">
+    select count(*) from fenlei
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <select id="selectByKey" parameterType="org.shop.pojo.FenLei" resultType="java.lang.Integer">
+        select count(*) from fenlei 
+        <where>
+            <if test="sortId!=null and sortId!=''">and sort_id = #{sortId,jdbcType=INTEGER}</if>
+        </where>
+  </select>
+  <select id="selectByNameKey" parameterType="org.shop.pojo.FenLei" resultType="java.lang.Integer">
+        select count(*) from fenlei 
+        <where>
+            <if test="sortName!=null and sortName!=''">and sort_name = #{sortName}</if>
+        </where>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update fenlei
+    <set>
+      <if test="record.sortId != null">
+        sort_id = #{record.sortId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sortName != null">
+        sort_name = #{record.sortName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortDescribe != null">
+        sort_describe = #{record.sortDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortRemark != null">
+        sort_remark = #{record.sortRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update fenlei
+    set sort_id = #{record.sortId,jdbcType=INTEGER},
+      sort_name = #{record.sortName,jdbcType=VARCHAR},
+      sort_describe = #{record.sortDescribe,jdbcType=VARCHAR},
+      sort_remark = #{record.sortRemark,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.shop.pojo.FenLei">
+    update fenlei
+    <set>
+      <if test="sortName != null">
+        sort_name = #{sortName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortDescribe != null">
+        sort_describe = #{sortDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="sortRemark != null">
+        sort_remark = #{sortRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.shop.pojo.FenLei">
+    update fenlei
+    set sort_name = #{sortName,jdbcType=VARCHAR},
+      sort_describe = #{sortDescribe,jdbcType=VARCHAR},
+      sort_remark = #{sortRemark,jdbcType=VARCHAR}
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </update>
+</mapper>
