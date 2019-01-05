@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.shop.dao.RuKuMapper">
+  <resultMap id="BaseResultMap" type="org.shop.pojo.RuKu">
+    <id column="ruku_id" jdbcType="INTEGER" property="rukuId" />
+    <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    <result column="shop_fenlei" jdbcType="VARCHAR" property="shopFenlei" />
+    <result column="ruku_shuliang" jdbcType="INTEGER" property="rukuShuliang" />
+    <result column="ruku_data" jdbcType="VARCHAR" property="rukuData" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ruku_id, shop_name, shop_fenlei, ruku_shuliang, ruku_data
+  </sql>
+  <select id="selectByExample" parameterType="org.shop.pojo.RuKuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ruku
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByKey" parameterType="org.shop.pojo.RuKu" resultMap="BaseResultMap">
+      select * from ruku
+      <where>
+         <!--  <if test="ruku_id!=null and ruku_id!=''">and ruku_id = #{rukuId}</if> -->
+          <if test="shopName!=null and shopName!=''">and shop_name like "%"#{shopName}"%"</if>
+          <if test="shopFenlei!=null and shopFenlei!=''">and shop_fenlei like "%"#{shopFenlei}"%"</if>
+         <!--  <if test="ruku_shuliang!=null and ruku_shuliang!=''">and ruku_shuliang "%"#{rukuShuliang}"%"</if> -->
+          <if test="rukuData!=null and rukuData!=''">and ruku_data like "%"#{rukuData}"%"</if>
+      </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ruku
+    where ruku_id = #{rukuId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ruku
+    where ruku_id = #{rukuId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.shop.pojo.RuKuExample">
+    delete from ruku
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.shop.pojo.RuKu">
+    insert into ruku (ruku_id, shop_name, shop_fenlei, 
+      ruku_shuliang, ruku_data)
+    values (#{rukuId,jdbcType=INTEGER}, #{shopName,jdbcType=VARCHAR}, #{shopFenlei,jdbcType=VARCHAR}, 
+      #{rukuShuliang,jdbcType=INTEGER}, #{rukuData,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.shop.pojo.RuKu">
+    insert into ruku
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rukuId != null">
+        ruku_id,
+      </if>
+      <if test="shopName != null">
+        shop_name,
+      </if>
+      <if test="shopFenlei != null">
+        shop_fenlei,
+      </if>
+      <if test="rukuShuliang != null">
+        ruku_shuliang,
+      </if>
+      <if test="rukuData != null">
+        ruku_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rukuId != null">
+        #{rukuId,jdbcType=INTEGER},
+      </if>
+      <if test="shopName != null">
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopFenlei != null">
+        #{shopFenlei,jdbcType=VARCHAR},
+      </if>
+      <if test="rukuShuliang != null">
+        #{rukuShuliang,jdbcType=INTEGER},
+      </if>
+      <if test="rukuData != null">
+        #{rukuData,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.shop.pojo.RuKuExample" resultType="java.lang.Long">
+    select count(*) from ruku
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ruku
+    <set>
+      <if test="record.rukuId != null">
+        ruku_id = #{record.rukuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.shopName != null">
+        shop_name = #{record.shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopFenlei != null">
+        shop_fenlei = #{record.shopFenlei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rukuShuliang != null">
+        ruku_shuliang = #{record.rukuShuliang,jdbcType=INTEGER},
+      </if>
+      <if test="record.rukuData != null">
+        ruku_data = #{record.rukuData,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ruku
+    set ruku_id = #{record.rukuId,jdbcType=INTEGER},
+      shop_name = #{record.shopName,jdbcType=VARCHAR},
+      shop_fenlei = #{record.shopFenlei,jdbcType=VARCHAR},
+      ruku_shuliang = #{record.rukuShuliang,jdbcType=INTEGER},
+      ruku_data = #{record.rukuData,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.shop.pojo.RuKu">
+    update ruku
+    <set>
+      <if test="shopName != null">
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopFenlei != null">
+        shop_fenlei = #{shopFenlei,jdbcType=VARCHAR},
+      </if>
+      <if test="rukuShuliang != null">
+        ruku_shuliang = #{rukuShuliang,jdbcType=INTEGER},
+      </if>
+      <if test="rukuData != null">
+        ruku_data = #{rukuData,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ruku_id = #{rukuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.shop.pojo.RuKu">
+    update ruku
+    set shop_name = #{shopName,jdbcType=VARCHAR},
+      shop_fenlei = #{shopFenlei,jdbcType=VARCHAR},
+      ruku_shuliang = #{rukuShuliang,jdbcType=INTEGER},
+      ruku_data = #{rukuData,jdbcType=VARCHAR}
+    where ruku_id = #{rukuId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByIdKey" parameterType="org.shop.pojo.RuKu" resultType="java.lang.Integer">
+        select count(*) from ruku
+        <where>
+           <if test="rukuId!=null and rukuId!=''">and ruku_id = #{rukuId}</if>
+        </where>
+  </select>
+</mapper>
