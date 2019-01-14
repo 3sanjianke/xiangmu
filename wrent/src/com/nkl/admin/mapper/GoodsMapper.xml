@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nkl.admin.dao.IGoodsDao">
+
+	<insert id="addGoods" parameterType="Goods">
+		<![CDATA[
+			insert into goods
+				values(null,#{goods_type_id},#{goods_no},#{goods_name},#{goods_price},#{goods_yj},#{goods_price2},#{goods_count},#{goods_pic},#{goods_desc},#{goods_date})
+		]]>
+	</insert>
+
+	<delete id="delGoods" parameterType="int">
+		<![CDATA[
+			delete from goods where goods_id=#{goods_id}
+		]]>
+	</delete>
+
+	<delete id="delGoodss" parameterType="int">
+		<![CDATA[
+			delete from goods where goods_id in 
+		]]>
+		<foreach collection="array" item="goods_ids"  open="(" separator="," close=")">
+			#{goods_ids}
+		</foreach>
+	</delete>
+
+	<update id="updateGoods" parameterType="Goods">
+		<![CDATA[
+			UPDATE goods
+		]]>
+		<set>
+			<if test="goods_type_id!=0">
+			<![CDATA[
+				goods_type_id = #{goods_type_id},
+			]]>
+			</if>
+			<if test="goods_no!=null and goods_no!=''">
+			<![CDATA[
+				goods_no = #{goods_no},
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				goods_name = #{goods_name},
+			]]>
+			</if>
+			<if test="goods_price!=0">
+			<![CDATA[
+				goods_price = #{goods_price},
+			]]>
+			</if>
+			<if test="goods_price2!=0">
+			<![CDATA[
+				goods_price2 = #{goods_price2},
+			]]>
+			</if>
+			<if test="goods_count!=-1">
+			<![CDATA[
+				goods_count = #{goods_count},
+			]]>
+			</if>
+			<if test="goods_pic!=null and goods_pic!=''">
+			<![CDATA[
+				goods_pic = #{goods_pic},
+			]]>
+			</if>
+			<if test="goods_desc!=null and goods_desc!=''">
+			<![CDATA[
+				goods_desc = #{goods_desc}
+			]]>
+			</if>
+		</set>
+		<![CDATA[
+			where goods_id = #{goods_id}
+		]]>
+	</update>
+
+	<select id="getGoods" parameterType="Goods" resultType="Goods">
+		<![CDATA[
+			SELECT b.*,bt1.goods_type_name goods_type_name FROM goods b
+		      left join goods_type bt1 on b.goods_type_id=bt1.goods_type_id
+		]]>
+		<where>
+			<if test="goods_id!=0">
+			<![CDATA[
+				goods_id = #{goods_id}
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="listGoodss" parameterType="Goods" resultType="Goods">
+		<![CDATA[
+			SELECT * FROM (
+			SELECT b.*,bt1.goods_type_name goods_type_name FROM goods b
+		      left join goods_type bt1 on b.goods_type_id=bt1.goods_type_id
+		]]>
+		<where>
+			<if test="goods_id!=0">
+			<![CDATA[
+				goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_no!=null and goods_no!=''">
+			<![CDATA[
+				and goods_no like '%${goods_no}%'
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="goods_type_id!=0">
+			<![CDATA[
+				and b.goods_type_id = #{goods_type_id}
+			]]>
+			</if>
+			<if test="goods_price_min!=null and goods_price_min!=''">
+			<![CDATA[
+				and goods_price >= CAST(#{goods_price_min} AS SIGNED)
+			]]>
+			</if>
+			<if test="goods_price_max!=null and goods_price_max!=''">
+			<![CDATA[
+				and goods_price <= CAST(#{goods_price_max} AS SIGNED)
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by goods_date desc,goods_id asc) t
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			Limit ${start},${limit}
+		]]>
+		</if>
+	</select>
+	
+	<select id="listGoodssTop" parameterType="Goods" resultType="Goods">
+		<![CDATA[
+			SELECT * FROM (
+			SELECT g.*,gt.goods_type_name,IFNULL(gs.goods_sale,0) goods_sale FROM goods g
+			  left join goods_type gt on g.goods_type_id=gt.goods_type_id
+			  left join (select goods_id,sum(goods_count) goods_sale from orders group by goods_id) gs on g.goods_id=gs.goods_id
+		]]>
+		<where>
+			<if test="goods_id!=0">
+			<![CDATA[
+				g.goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_no!=null and goods_no!=''">
+			<![CDATA[
+				and goods_no like '%${goods_no}%'
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="goods_type_id!=0">
+			<![CDATA[
+				and g.goods_type_id = #{goods_type_id}
+			]]>
+			</if>
+			<if test="goods_price_min!=null and goods_price_min!=''">
+			<![CDATA[
+				and goods_price >= CAST(#{goods_price_min} AS SIGNED)
+			]]>
+			</if>
+			<if test="goods_price_max!=null and goods_price_max!=''">
+			<![CDATA[
+				and goods_price <= CAST(#{goods_price_max} AS SIGNED)
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by goods_sale desc,g.goods_id asc) t
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			Limit ${start},${limit}
+		]]>
+		</if>
+	</select>
+
+	<select id="listGoodssCount" parameterType="Goods" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM goods b
+		      left join goods_type bt1 on b.goods_type_id=bt1.goods_type_id
+		]]>
+		<where>
+			<if test="goods_id!=0">
+			<![CDATA[
+				goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_no!=null and goods_no!=''">
+			<![CDATA[
+				and goods_no like '%${goods_no}%'
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="goods_type_id!=0">
+			<![CDATA[
+				and b.goods_type_id = #{goods_type_id}
+			]]>
+			</if>
+			<if test="goods_price_min!=null and goods_price_min!=''">
+			<![CDATA[
+				and goods_price >= CAST(#{goods_price_min} AS SIGNED)
+			]]>
+			</if>
+			<if test="goods_price_max!=null and goods_price_max!=''">
+			<![CDATA[
+				and goods_price <= CAST(#{goods_price_max} AS SIGNED)
+			]]>
+			</if>
+		</where>
+	</select>
+
+</mapper>

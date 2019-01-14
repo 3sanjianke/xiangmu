@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nkl.admin.dao.IOrdersDao">
+
+	<insert id="addOrders" parameterType="Orders">
+		<![CDATA[
+			insert into orders
+				values(null,#{orders_no},#{orders_date},#{user_id},#{real_name},#{user_address},#{user_phone},#{goods_id},#{goods_name},#{goods_price},#{goods_yj},#{goods_price2},#{goods_count},#{orders_date1},#{orders_date2},#{goods_money},#{orders_date3},#{goods_money2},#{orders_flag})
+		]]>
+	</insert>
+
+	<delete id="delOrders" parameterType="int">
+		<![CDATA[
+			delete from orders where orders_id=#{orders_id}
+		]]>
+	</delete>
+
+	<delete id="delOrderss" parameterType="int">
+		<![CDATA[
+			delete from orders where orders_id in 
+		]]>
+		<foreach collection="array" item="orders_ids"  open="(" separator="," close=")">
+			#{orders_ids}
+		</foreach>
+	</delete>
+
+	<update id="updateOrders" parameterType="Orders">
+		<![CDATA[
+			UPDATE orders
+		]]>
+		<set>
+			<if test="orders_date3!=null and orders_date3!=''">
+			<![CDATA[
+				orders_date3 = #{orders_date3},
+			]]>
+			</if>
+			<if test="goods_money2!=null and goods_money2!=''">
+			<![CDATA[
+				goods_money2 = #{goods_money2},
+			]]>
+			</if>
+			<if test="orders_flag!=0">
+			<![CDATA[
+				orders_flag = #{orders_flag}
+			]]>
+			</if>
+		</set>
+		<if test="orders_no!=null and orders_no!=''">
+		<![CDATA[
+			where orders_no = #{orders_no}
+		]]>
+		</if>
+		<if test="orders_no==null or orders_no==''">
+		<![CDATA[
+			where orders_id = #{orders_id}
+		]]>
+		</if>
+	</update>
+	
+	<update id="updateOrdersFlag">
+		<![CDATA[
+			UPDATE orders set orders_flag=5 WHERE DATE_FORMAT(SYSDATE(),'%Y-%m-%d') > orders_date2
+			  and orders_flag=1
+		]]>
+	</update>
+
+	<select id="getOrders" parameterType="Orders" resultType="Orders">
+		<![CDATA[
+			SELECT * FROM orders
+		]]>
+		<where>
+			<if test="orders_id!=0">
+			<![CDATA[
+				orders_id = #{orders_id}
+			]]>
+			</if>
+			<if test="orders_no!=null and orders_no!=''">
+			<![CDATA[
+				and orders_no = #{orders_no}
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="listOrderss" parameterType="Orders" resultType="Orders">
+		<![CDATA[
+			SELECT * FROM (
+			SELECT * FROM orders
+		]]>
+		<where>
+			<if test="orders_id!=0">
+			<![CDATA[
+				orders_id = #{orders_id}
+			]]>
+			</if>
+			<if test="user_id!=0">
+			<![CDATA[
+				and user_id = #{user_id}
+			]]>
+			</if>
+			<if test="real_name!=null and real_name!=''">
+			<![CDATA[
+				and real_name like '%${real_name}%'
+			]]>
+			</if>
+			<if test="goods_id!=0">
+			<![CDATA[
+				and goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="orders_no!=null and orders_no!=''">
+			<![CDATA[
+				and orders_no like '%${orders_no}%'
+			]]>
+			</if>
+			<if test="orders_flag!=0">
+			<![CDATA[
+				and orders_flag = #{orders_flag}
+			]]>
+			</if>
+			<if test="orders_flags!=null and orders_flags!=''">
+			<![CDATA[
+				and orders_flag in (${orders_flags})
+			]]>
+			</if>
+			<if test="orders_month_min!=null and orders_month_min!=''">
+			<![CDATA[
+				and orders_date1 >= #{orders_month_min}
+			]]>
+			</if>
+			<if test="orders_month_max!=null and orders_month_max!=''">
+			<![CDATA[
+				and orders_date1 <= concat(#{orders_month_max},'-31')
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by orders_date desc,orders_id asc) t
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			Limit ${start},${limit}
+		]]>
+		</if>
+	</select>
+
+	<select id="listOrderssCount" parameterType="Orders" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM orders
+		]]>
+		<where>
+			<if test="orders_id!=0">
+			<![CDATA[
+				orders_id = #{orders_id}
+			]]>
+			</if>
+			<if test="user_id!=0">
+			<![CDATA[
+				and user_id = #{user_id}
+			]]>
+			</if>
+			<if test="real_name!=null and real_name!=''">
+			<![CDATA[
+				and real_name like '%${real_name}%'
+			]]>
+			</if>
+			<if test="goods_id!=0">
+			<![CDATA[
+				and goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="orders_no!=null and orders_no!=''">
+			<![CDATA[
+				and orders_no like '%${orders_no}%'
+			]]>
+			</if>
+			<if test="orders_flag!=0">
+			<![CDATA[
+				and orders_flag = #{orders_flag}
+			]]>
+			</if>
+			<if test="orders_flags!=null and orders_flags!=''">
+			<![CDATA[
+				and orders_flag in (${orders_flags})
+			]]>
+			</if>
+			<if test="orders_month_min!=null and orders_month_min!=''">
+			<![CDATA[
+				and orders_date1 >= #{orders_month_min}
+			]]>
+			</if>
+			<if test="orders_month_max!=null and orders_month_max!=''">
+			<![CDATA[
+				and orders_date1 <= concat(#{orders_month_max},'-31')
+			]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listOrderssSum" parameterType="Orders" resultType="Orders">
+		<![CDATA[
+			SELECT * FROM (
+			SELECT goods_id,goods_name,sum(goods_count) goods_count FROM orders
+		]]>
+		<where>
+			<if test="goods_id!=0">
+			<![CDATA[
+				and goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="orders_flag!=0">
+			<![CDATA[
+				and orders_flag = #{orders_flag}
+			]]>
+			</if>
+			<if test="orders_flags!=null and orders_flags!=''">
+			<![CDATA[
+				and orders_flag in (${orders_flags})
+			]]>
+			</if>
+			<if test="orders_month_min!=null and orders_month_min!=''">
+			<![CDATA[
+				and orders_date1 >= #{orders_month_min}
+			]]>
+			</if>
+			<if test="orders_month_max!=null and orders_month_max!=''">
+			<![CDATA[
+				and orders_date1 <= concat(#{orders_month_max},'-31')
+			]]>
+			</if>
+			<if test="orders_date_min!=null and orders_date_min!=''">
+			<![CDATA[
+				and orders_date1 <= #{orders_date_max}
+				and orders_date2 >= #{orders_date_min}
+			]]>
+			</if>
+			<if test="goods_type_id!=0">
+			<![CDATA[
+				and goods_id in (select goods_id from goods where goods_type_id= #{goods_type_id})
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+		    group by goods_id,goods_name
+			order by sum(goods_count) desc,goods_id asc) t
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			Limit ${start},${limit}
+		]]>
+		</if>
+	</select>
+
+	<select id="listOrderssSumCount" parameterType="Orders" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM (
+			SELECT goods_id,goods_name,sum(goods_count) goods_count FROM orders
+		]]>
+		<where>
+			<if test="goods_id!=0">
+			<![CDATA[
+				and goods_id = #{goods_id}
+			]]>
+			</if>
+			<if test="goods_name!=null and goods_name!=''">
+			<![CDATA[
+				and goods_name like '%${goods_name}%'
+			]]>
+			</if>
+			<if test="orders_flag!=0">
+			<![CDATA[
+				and orders_flag = #{orders_flag}
+			]]>
+			</if>
+			<if test="orders_flags!=null and orders_flags!=''">
+			<![CDATA[
+				and orders_flag in (${orders_flags})
+			]]>
+			</if>
+			<if test="orders_month_min!=null and orders_month_min!=''">
+			<![CDATA[
+				and orders_date1 >= #{orders_month_min}
+			]]>
+			</if>
+			<if test="orders_month_max!=null and orders_month_max!=''">
+			<![CDATA[
+				and orders_date1 <= concat(#{orders_month_max},'-31')
+			]]>
+			</if>
+			<if test="orders_date_min!=null and orders_date_min!=''">
+			<![CDATA[
+				and orders_date1 <= #{orders_date_max}
+				and orders_date2 >= #{orders_date_min}
+			]]>
+			</if>
+			<if test="goods_type_id!=0">
+			<![CDATA[
+				and goods_id in (select goods_id from goods where goods_type_id= #{goods_type_id})
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+		    group by goods_id,goods_name) t
+		]]>
+	</select>
+
+</mapper>
